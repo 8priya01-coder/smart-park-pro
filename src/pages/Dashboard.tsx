@@ -30,9 +30,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-accent/5">
       {/* Header */}
-      <header className="border-b bg-card shadow-sm">
+      <header className="border-b bg-card/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-accent flex items-center justify-center shadow-glow">
@@ -47,7 +47,7 @@ const Dashboard = () => {
             variant="outline" 
             size="sm" 
             onClick={handleLogout}
-            className="gap-2"
+            className="gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-smooth"
           >
             <LogOut className="h-4 w-4" />
             Logout
@@ -58,18 +58,21 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-foreground mb-2">
-            Welcome back, {userEmail.split('@')[0]}!
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            Ready to park your vehicle? Let's get started.
-          </p>
+        <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-primary p-8 shadow-elegant">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnptMCAyYzIuMjEgMCA0IDEuNzkgNCA0cy0xLjc5IDQtNCA0LTQtMS43OS00LTQgMS43OS00IDQtNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-40"></div>
+          <div className="relative z-10">
+            <h2 className="text-3xl font-bold text-primary-foreground mb-2">
+              Welcome back, {userEmail.split('@')[0]}!
+            </h2>
+            <p className="text-primary-foreground/80 text-lg">
+              Ready to park your vehicle? Let's get started.
+            </p>
+          </div>
         </div>
 
         {/* Action Cards */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <Card className="shadow-elegant hover:shadow-xl transition-smooth cursor-pointer border-2 border-transparent hover:border-accent" onClick={handleRegisterCar}>
+          <Card className="shadow-elegant hover:shadow-xl transition-smooth cursor-pointer border-2 border-transparent hover:border-accent bg-gradient-to-br from-card to-accent/5" onClick={handleRegisterCar}>
             <CardHeader>
               <div className="w-12 h-12 rounded-lg bg-gradient-accent flex items-center justify-center mb-3 shadow-glow">
                 <Car className="h-6 w-6 text-accent-foreground" />
@@ -80,16 +83,16 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full gradient-accent text-accent-foreground font-semibold hover:opacity-90 transition-smooth">
+              <Button className="w-full gradient-accent text-accent-foreground font-semibold hover:opacity-90 transition-smooth shadow-glow">
                 Start Registration
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="shadow-elegant">
+          <Card className="shadow-elegant bg-gradient-to-br from-card to-primary/5">
             <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center mb-3">
-                <Clock className="h-6 w-6 text-primary-foreground" />
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 border border-primary/20">
+                <Clock className="h-6 w-6 text-primary" />
               </div>
               <CardTitle className="text-2xl">Quick Stats</CardTitle>
               <CardDescription className="text-base">
@@ -99,7 +102,7 @@ const Dashboard = () => {
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center py-2 border-b">
                 <span className="text-muted-foreground">Available Spots</span>
-                <span className="font-semibold text-foreground text-lg">24/30</span>
+                <span className="font-semibold text-success text-lg">24/30</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b">
                 <span className="text-muted-foreground">Average Wait Time</span>
@@ -115,10 +118,10 @@ const Dashboard = () => {
 
         {/* Features Grid */}
         <div className="grid sm:grid-cols-3 gap-4">
-          <Card className="shadow-sm">
+          <Card className="shadow-sm bg-gradient-to-br from-card to-blue-500/5 border-blue-500/20 hover:shadow-md transition-smooth">
             <CardHeader className="pb-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center mb-2">
-                <ParkingSquare className="h-5 w-5 text-secondary-foreground" />
+              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-2 border border-blue-500/20">
+                <ParkingSquare className="h-5 w-5 text-blue-600" />
               </div>
               <CardTitle className="text-lg">Smart Allocation</CardTitle>
             </CardHeader>
@@ -129,10 +132,10 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm">
+          <Card className="shadow-sm bg-gradient-to-br from-card to-green-500/5 border-green-500/20 hover:shadow-md transition-smooth">
             <CardHeader className="pb-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center mb-2">
-                <CreditCard className="h-5 w-5 text-secondary-foreground" />
+              <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center mb-2 border border-green-500/20">
+                <CreditCard className="h-5 w-5 text-green-600" />
               </div>
               <CardTitle className="text-lg">Secure Payment</CardTitle>
             </CardHeader>
@@ -143,10 +146,10 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm">
+          <Card className="shadow-sm bg-gradient-to-br from-card to-purple-500/5 border-purple-500/20 hover:shadow-md transition-smooth">
             <CardHeader className="pb-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center mb-2">
-                <Clock className="h-5 w-5 text-secondary-foreground" />
+              <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center mb-2 border border-purple-500/20">
+                <Clock className="h-5 w-5 text-purple-600" />
               </div>
               <CardTitle className="text-lg">24/7 Access</CardTitle>
             </CardHeader>
