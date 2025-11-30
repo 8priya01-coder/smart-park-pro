@@ -30,7 +30,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50">
       {/* Header */}
       <header className="border-b bg-card/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -58,13 +58,13 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Welcome Section */}
-        <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-primary p-8 shadow-elegant">
+        <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-blue-800 p-8 shadow-elegant">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnptMCAyYzIuMjEgMCA0IDEuNzkgNCA0cy0xLjc5IDQtNCA0LTQtMS43OS00LTQgMS43OS00IDQtNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-40"></div>
           <div className="relative z-10">
-            <h2 className="text-3xl font-bold text-primary-foreground mb-2">
+            <h2 className="text-3xl font-bold text-white mb-2">
               Welcome back, {userEmail.split('@')[0]}!
             </h2>
-            <p className="text-primary-foreground/80 text-lg">
+            <p className="text-white/90 text-lg">
               Ready to park your vehicle? Let's get started.
             </p>
           </div>
