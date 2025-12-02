@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Car, ParkingSquare, LogOut, Clock, CreditCard } from "lucide-react";
+import { Car, ParkingSquare, LogOut, Clock, CreditCard, MapPin, Timer, IndianRupee } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -109,15 +109,24 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-muted-foreground">Available Spots</span>
+                <span className="text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-green-600" />
+                  Available Spots
+                </span>
                 <span className="font-semibold text-success text-lg">24/30</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b">
-                <span className="text-muted-foreground">Average Wait Time</span>
+                <span className="text-muted-foreground flex items-center gap-2">
+                  <Timer className="h-4 w-4 text-blue-600" />
+                  Average Wait Time
+                </span>
                 <span className="font-semibold text-foreground text-lg">2 mins</span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-muted-foreground">Hourly Rate</span>
+                <span className="text-muted-foreground flex items-center gap-2">
+                  <IndianRupee className="h-4 w-4 text-amber-600" />
+                  Hourly Rate
+                </span>
                 <span className="font-semibold text-accent text-lg">₹50/hr</span>
               </div>
             </CardContent>
