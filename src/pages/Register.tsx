@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Zap, Car as CarIcon } from "lucide-react";
+import { ArrowLeft, Zap, Car as CarIcon, Clock, ParkingSquare } from "lucide-react";
+import { format, addHours } from "date-fns";
 
 const PARKING_SPOTS = [
   { id: "A1", occupied: false },
@@ -31,6 +32,15 @@ const Register = () => {
   const [parkingHours, setParkingHours] = useState("");
   const [carType, setCarType] = useState("");
   const [selectedSpot, setSelectedSpot] = useState("");
+
+  const currentTime = useMemo(() => new Date(), []);
+  
+  const returnTime = useMemo(() => {
+    if (parkingHours) {
+      return addHours(currentTime, parseInt(parkingHours));
+    }
+    return null;
+  }, [parkingHours, currentTime]);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -65,6 +75,8 @@ const Register = () => {
       carType,
       selectedSpot,
       totalPrice,
+      entryTime: currentTime.toISOString(),
+      returnTime: returnTime?.toISOString(),
     };
 
     localStorage.setItem("registrationData", JSON.stringify(registrationData));
@@ -78,28 +90,42 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50">
       {/* Header */}
-      <header className="border-b bg-card shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/dashboard")}
-            className="gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">Car Registration</h1>
-            <p className="text-xs text-muted-foreground">Fill in the details below</p>
+      <header className="border-b bg-card/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-600 to-blue-800 flex items-center justify-center">
+              <ParkingSquare className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-foreground">ParkEasy</h1>
+              <p className="text-xs text-muted-foreground">Smart Parking System</p>
+            </div>
           </div>
+          <nav className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
+              Dashboard
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/about")}>
+              About Us
+            </Button>
+          </nav>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 max-w-5xl">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard")}
+          className="gap-2 mb-6"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Button>
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Owner & Car Details */}
           <Card className="shadow-elegant">
@@ -210,6 +236,40 @@ const Register = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* Time Duration Card */}
+          {parkingHours && (
+            <Card className="shadow-elegant border-blue-500/30 bg-gradient-to-br from-card to-blue-500/5">
+              <CardHeader>
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-blue-600" />
+                  Parking Duration
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-sm text-muted-foreground mb-1">Entry Time (Now)</p>
+                    <p className="text-xl font-bold text-green-700">
+                      {format(currentTime, "hh:mm a")}
+                    </p>
+                    <p className="text-sm text-green-600">
+                      {format(currentTime, "dd MMM yyyy")}
+                    </p>
+                  </div>
+                  <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                    <p className="text-sm text-muted-foreground mb-1">Return Before</p>
+                    <p className="text-xl font-bold text-orange-700">
+                      {returnTime && format(returnTime, "hh:mm a")}
+                    </p>
+                    <p className="text-sm text-orange-600">
+                      {returnTime && format(returnTime, "dd MMM yyyy")}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Price Summary */}
           {parkingHours && carType && (
