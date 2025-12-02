@@ -43,15 +43,23 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground">Smart Parking System</p>
             </div>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleLogout}
-            className="gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-smooth"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </Button>
+          <nav className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" className="bg-blue-100">
+              Dashboard
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/about")}>
+              About Us
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              className="gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-smooth"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </nav>
         </div>
       </header>
 
