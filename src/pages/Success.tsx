@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Home, Download } from "lucide-react";
+import { CheckCircle, Home, Download, Clock, User, Car, MapPin, Timer, CreditCard, CalendarClock, LogIn, LogOut } from "lucide-react";
+import { format } from "date-fns";
 
 const Success = () => {
   const navigate = useNavigate();
@@ -48,29 +49,81 @@ const Success = () => {
           <div className="bg-secondary/50 rounded-lg p-6 space-y-3">
             <h3 className="font-semibold text-lg mb-4 text-foreground">Booking Details</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-muted-foreground">Owner Name</p>
-                <p className="font-semibold text-foreground">{registrationData.ownerName}</p>
+              <div className="flex items-start gap-3">
+                <User className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div>
+                  <p className="text-muted-foreground">Owner Name</p>
+                  <p className="font-semibold text-foreground">{registrationData.ownerName}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">Car Number</p>
-                <p className="font-semibold text-foreground">{registrationData.carNumber}</p>
+              <div className="flex items-start gap-3">
+                <Car className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div>
+                  <p className="text-muted-foreground">Car Number</p>
+                  <p className="font-semibold text-foreground">{registrationData.carNumber}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">Parking Spot</p>
-                <p className="font-bold text-accent text-lg">{registrationData.selectedSpot}</p>
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div>
+                  <p className="text-muted-foreground">Parking Spot</p>
+                  <p className="font-bold text-accent text-lg">{registrationData.selectedSpot}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">Duration</p>
-                <p className="font-semibold text-foreground">{registrationData.parkingHours} hours</p>
+              <div className="flex items-start gap-3">
+                <Timer className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div>
+                  <p className="text-muted-foreground">Duration</p>
+                  <p className="font-semibold text-foreground">{registrationData.parkingHours} hours</p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">Car Type</p>
-                <p className="font-semibold text-foreground capitalize">{registrationData.carType}</p>
+              <div className="flex items-start gap-3">
+                <CalendarClock className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div>
+                  <p className="text-muted-foreground">Car Type</p>
+                  <p className="font-semibold text-foreground capitalize">{registrationData.carType}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">Amount Paid</p>
-                <p className="font-bold text-success text-lg">₹{registrationData.totalPrice}</p>
+              <div className="flex items-start gap-3">
+                <CreditCard className="h-5 w-5 text-green-600 mt-0.5" />
+                <div>
+                  <p className="text-muted-foreground">Amount Paid</p>
+                  <p className="font-bold text-success text-lg">₹{registrationData.totalPrice}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Parking Duration */}
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
+            <h3 className="font-semibold text-lg mb-4 text-foreground flex items-center gap-2">
+              <Clock className="h-5 w-5 text-blue-600" />
+              Parking Duration
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <LogIn className="h-4 w-4 text-green-600" />
+                  <p className="text-sm text-muted-foreground">Entry Time</p>
+                </div>
+                <p className="text-xl font-bold text-green-700">
+                  {registrationData.entryTime && format(new Date(registrationData.entryTime), "hh:mm a")}
+                </p>
+                <p className="text-sm text-green-600">
+                  {registrationData.entryTime && format(new Date(registrationData.entryTime), "dd MMM yyyy")}
+                </p>
+              </div>
+              <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <LogOut className="h-4 w-4 text-orange-600" />
+                  <p className="text-sm text-muted-foreground">Return Before</p>
+                </div>
+                <p className="text-xl font-bold text-orange-700">
+                  {registrationData.returnTime && format(new Date(registrationData.returnTime), "hh:mm a")}
+                </p>
+                <p className="text-sm text-orange-600">
+                  {registrationData.returnTime && format(new Date(registrationData.returnTime), "dd MMM yyyy")}
+                </p>
               </div>
             </div>
           </div>
