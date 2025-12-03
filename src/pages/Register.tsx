@@ -11,18 +11,18 @@ import { format, addHours } from "date-fns";
 import parkEasyLogo from "@/assets/parkeasy-logo.png";
 
 const PARKING_SPOTS = [
-  { id: "A1", occupied: false },
-  { id: "A2", occupied: true },
-  { id: "A3", occupied: false },
-  { id: "A4", occupied: false },
-  { id: "B1", occupied: false },
-  { id: "B2", occupied: false },
-  { id: "B3", occupied: true },
-  { id: "B4", occupied: false },
-  { id: "C1", occupied: false },
-  { id: "C2", occupied: false },
-  { id: "C3", occupied: false },
-  { id: "C4", occupied: true },
+  { id: "A1", occupied: false, type: "electric" },
+  { id: "A2", occupied: true, type: "electric" },
+  { id: "A3", occupied: false, type: "electric" },
+  { id: "A4", occupied: false, type: "electric" },
+  { id: "B1", occupied: false, type: "normal" },
+  { id: "B2", occupied: false, type: "normal" },
+  { id: "B3", occupied: true, type: "normal" },
+  { id: "B4", occupied: false, type: "normal" },
+  { id: "C1", occupied: false, type: "normal" },
+  { id: "C2", occupied: false, type: "normal" },
+  { id: "C3", occupied: false, type: "normal" },
+  { id: "C4", occupied: true, type: "normal" },
 ];
 
 const Register = () => {
@@ -65,8 +65,7 @@ const Register = () => {
     // Calculate price
     const hours = parseInt(parkingHours);
     const baseRate = 50;
-    const electricCarDiscount = carType === "electric" ? 0.9 : 1;
-    const totalPrice = hours * baseRate * electricCarDiscount;
+    const totalPrice = hours * baseRate;
 
     // Store registration data
     const registrationData = {
@@ -171,7 +170,7 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="carType">Car Type</Label>
-                  <Select value={carType} onValueChange={setCarType}>
+                  <Select value={carType} onValueChange={(value) => { setCarType(value); setSelectedSpot(""); }}>
                     <SelectTrigger id="carType" className="h-11">
                       <SelectValue placeholder="Select car type" />
                     </SelectTrigger>
@@ -179,7 +178,7 @@ const Register = () => {
                       <SelectItem value="electric">
                         <div className="flex items-center gap-2">
                           <Zap className="h-4 w-4 text-accent" />
-                          Electric Car (10% discount)
+                          Electric Car
                         </div>
                       </SelectItem>
                       <SelectItem value="normal">
@@ -199,38 +198,53 @@ const Register = () => {
           <Card className="shadow-elegant">
             <CardHeader>
               <CardTitle className="text-2xl">Select Parking Spot</CardTitle>
-              <CardDescription>Choose an available parking space</CardDescription>
+              <CardDescription>
+                {carType 
+                  ? `Showing ${carType === "electric" ? "EV" : "Normal"} parking spots`
+                  : "Please select a car type first to see available spots"}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-6 gap-3">
-                {PARKING_SPOTS.map((spot) => (
-                  <button
-                    key={spot.id}
-                    type="button"
-                    disabled={spot.occupied}
-                    onClick={() => setSelectedSpot(spot.id)}
-                    className={`
-                      h-20 rounded-lg border-2 font-semibold transition-smooth
-                      ${spot.occupied 
-                        ? "bg-muted border-border cursor-not-allowed opacity-50" 
-                        : selectedSpot === spot.id
-                        ? "gradient-accent border-accent text-accent-foreground shadow-glow"
-                        : "bg-card border-border hover:border-accent hover:shadow-md"
-                      }
-                    `}
-                  >
-                    <div className="text-lg">{spot.id}</div>
-                    <div className="text-xs mt-1">
-                      {spot.occupied ? "Occupied" : "Available"}
+              {carType ? (
+                <>
+                  <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-6 gap-3">
+                    {PARKING_SPOTS.filter(spot => spot.type === carType).map((spot) => (
+                      <button
+                        key={spot.id}
+                        type="button"
+                        disabled={spot.occupied}
+                        onClick={() => setSelectedSpot(spot.id)}
+                        className={`
+                          h-20 rounded-lg border-2 font-semibold transition-smooth
+                          ${spot.occupied 
+                            ? "bg-muted border-border cursor-not-allowed opacity-50" 
+                            : selectedSpot === spot.id
+                            ? "gradient-accent border-accent text-accent-foreground shadow-glow"
+                            : "bg-card border-border hover:border-accent hover:shadow-md"
+                          }
+                        `}
+                      >
+                        <div className="text-lg">{spot.id}</div>
+                        <div className="text-xs mt-1">
+                          {spot.occupied ? "Occupied" : "Available"}
+                        </div>
+                        <div className="text-xs mt-1">
+                          {spot.type === "electric" ? <Zap className="h-3 w-3 mx-auto text-yellow-500" /> : <CarIcon className="h-3 w-3 mx-auto text-blue-500" />}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  {selectedSpot && (
+                    <div className="mt-4 p-3 bg-accent/10 border border-accent/30 rounded-lg">
+                      <p className="text-sm font-medium text-accent">
+                        Selected Spot: <span className="text-lg font-bold">{selectedSpot}</span>
+                      </p>
                     </div>
-                  </button>
-                ))}
-              </div>
-              {selectedSpot && (
-                <div className="mt-4 p-3 bg-accent/10 border border-accent/30 rounded-lg">
-                  <p className="text-sm font-medium text-accent">
-                    Selected Spot: <span className="text-lg font-bold">{selectedSpot}</span>
-                  </p>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  Please select a car type above to view available parking spots
                 </div>
               )}
             </CardContent>
@@ -278,14 +292,11 @@ const Register = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Estimated Total</p>
                     <p className="text-3xl font-bold text-foreground">
-                      ₹{parseInt(parkingHours) * 50 * (carType === "electric" ? 0.9 : 1)}
+                      ₹{parseInt(parkingHours) * 50}
                     </p>
                   </div>
                   <div className="text-right text-sm text-muted-foreground">
                     <p>₹50/hour × {parkingHours} hours</p>
-                    {carType === "electric" && (
-                      <p className="text-accent font-medium">10% EV discount applied</p>
-                    )}
                   </div>
                 </div>
               </CardContent>
