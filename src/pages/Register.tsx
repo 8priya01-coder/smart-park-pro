@@ -65,7 +65,8 @@ const Register = () => {
     // Calculate price
     const hours = parseInt(parkingHours);
     const baseRate = 50;
-    const totalPrice = hours * baseRate;
+    const discount = carType === "normal" ? 0.10 : 0;
+    const totalPrice = Math.round(hours * baseRate * (1 - discount));
 
     // Store registration data
     const registrationData = {
@@ -292,11 +293,17 @@ const Register = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Estimated Total</p>
                     <p className="text-3xl font-bold text-foreground">
-                      ₹{parseInt(parkingHours) * 50}
+                      ₹{Math.round(parseInt(parkingHours) * 50 * (carType === "normal" ? 0.9 : 1))}
                     </p>
+                    {carType === "normal" && (
+                      <p className="text-sm text-green-600 font-medium">10% discount applied!</p>
+                    )}
                   </div>
                   <div className="text-right text-sm text-muted-foreground">
                     <p>₹50/hour × {parkingHours} hours</p>
+                    {carType === "normal" && (
+                      <p className="text-green-600">- 10% discount</p>
+                    )}
                   </div>
                 </div>
               </CardContent>
