@@ -44,7 +44,13 @@ const Dashboard = () => {
           </div>
           <nav className="flex items-center gap-2">
             <Button variant="ghost" size="sm" className="bg-blue-100">
-              Dashboard
+              Home Page
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/pricing")}>
+              Pricing
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/contact")}>
+              Contact Us
             </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate("/about")}>
               About Us
