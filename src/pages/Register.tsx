@@ -11,19 +11,24 @@ import { format, addHours } from "date-fns";
 import parkEasyLogo from "@/assets/parkeasy-logo.png";
 
 const PARKING_SPOTS = [
-  { id: "A1", occupied: false, type: "electric" },
-  { id: "A2", occupied: true, type: "electric" },
-  { id: "A3", occupied: false, type: "electric" },
-  { id: "A4", occupied: false, type: "electric" },
-  { id: "B1", occupied: false, type: "normal" },
-  { id: "B2", occupied: false, type: "normal" },
-  { id: "B3", occupied: true, type: "normal" },
-  { id: "B4", occupied: false, type: "normal" },
-  { id: "C1", occupied: false, type: "normal" },
-  { id: "C2", occupied: false, type: "normal" },
-  { id: "C3", occupied: false, type: "normal" },
-  { id: "C4", occupied: true, type: "normal" },
+  { id: "A1", type: "electric" },
+  { id: "A2", type: "electric" },
+  { id: "A3", type: "electric" },
+  { id: "A4", type: "electric" },
+  { id: "B1", type: "normal" },
+  { id: "B2", type: "normal" },
+  { id: "B3", type: "normal" },
+  { id: "B4", type: "normal" },
+  { id: "C1", type: "normal" },
+  { id: "C2", type: "normal" },
+  { id: "C3", type: "normal" },
+  { id: "C4", type: "normal" },
 ];
+
+interface BookedSpot {
+  spotId: string;
+  returnTime: string;
+}
 
 const Register = () => {
   const navigate = useNavigate();
@@ -33,6 +38,7 @@ const Register = () => {
   const [parkingHours, setParkingHours] = useState("");
   const [carType, setCarType] = useState("");
   const [selectedSpot, setSelectedSpot] = useState("");
+  const [bookedSpots, setBookedSpots] = useState<BookedSpot[]>([]);
 
   const currentTime = useMemo(() => new Date(), []);
   
@@ -42,6 +48,23 @@ const Register = () => {
     }
     return null;
   }, [parkingHours, currentTime]);
+
+  // Load and clean up booked spots from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("bookedSpots");
+    if (stored) {
+      const spots: BookedSpot[] = JSON.parse(stored);
+      const now = new Date();
+      // Filter out expired bookings
+      const activeSpots = spots.filter(spot => new Date(spot.returnTime) > now);
+      setBookedSpots(activeSpots);
+      localStorage.setItem("bookedSpots", JSON.stringify(activeSpots));
+    }
+  }, []);
+
+  const isSpotOccupied = (spotId: string) => {
+    return bookedSpots.some(spot => spot.spotId === spotId);
+  };
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -81,6 +104,14 @@ const Register = () => {
     };
 
     localStorage.setItem("registrationData", JSON.stringify(registrationData));
+
+    // Save booked spot
+    const newBookedSpot: BookedSpot = {
+      spotId: selectedSpot,
+      returnTime: returnTime!.toISOString(),
+    };
+    const updatedBookedSpots = [...bookedSpots, newBookedSpot];
+    localStorage.setItem("bookedSpots", JSON.stringify(updatedBookedSpots));
 
     toast({
       title: "Details Saved",
@@ -209,31 +240,34 @@ const Register = () => {
               {carType ? (
                 <>
                   <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-6 gap-3">
-                    {PARKING_SPOTS.filter(spot => spot.type === carType).map((spot) => (
-                      <button
-                        key={spot.id}
-                        type="button"
-                        disabled={spot.occupied}
-                        onClick={() => setSelectedSpot(spot.id)}
-                        className={`
-                          h-20 rounded-lg border-2 font-semibold transition-smooth
-                          ${spot.occupied 
-                            ? "bg-muted border-border cursor-not-allowed opacity-50" 
-                            : selectedSpot === spot.id
-                            ? "gradient-accent border-accent text-accent-foreground shadow-glow"
-                            : "bg-card border-border hover:border-accent hover:shadow-md"
-                          }
-                        `}
-                      >
-                        <div className="text-lg">{spot.id}</div>
-                        <div className="text-xs mt-1">
-                          {spot.occupied ? "Occupied" : "Available"}
-                        </div>
-                        <div className="text-xs mt-1">
-                          {spot.type === "electric" ? <Zap className="h-3 w-3 mx-auto text-yellow-500" /> : <CarIcon className="h-3 w-3 mx-auto text-blue-500" />}
-                        </div>
-                      </button>
-                    ))}
+                    {PARKING_SPOTS.filter(spot => spot.type === carType).map((spot) => {
+                      const occupied = isSpotOccupied(spot.id);
+                      return (
+                        <button
+                          key={spot.id}
+                          type="button"
+                          disabled={occupied}
+                          onClick={() => setSelectedSpot(spot.id)}
+                          className={`
+                            h-20 rounded-lg border-2 font-semibold transition-smooth
+                            ${occupied 
+                              ? "bg-muted border-border cursor-not-allowed opacity-50" 
+                              : selectedSpot === spot.id
+                              ? "gradient-accent border-accent text-accent-foreground shadow-glow"
+                              : "bg-card border-border hover:border-accent hover:shadow-md"
+                            }
+                          `}
+                        >
+                          <div className="text-lg">{spot.id}</div>
+                          <div className="text-xs mt-1">
+                            {occupied ? "Occupied" : "Available"}
+                          </div>
+                          <div className="text-xs mt-1">
+                            {spot.type === "electric" ? <Zap className="h-3 w-3 mx-auto text-yellow-500" /> : <CarIcon className="h-3 w-3 mx-auto text-blue-500" />}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                   {selectedSpot && (
                     <div className="mt-4 p-3 bg-accent/10 border border-accent/30 rounded-lg">
